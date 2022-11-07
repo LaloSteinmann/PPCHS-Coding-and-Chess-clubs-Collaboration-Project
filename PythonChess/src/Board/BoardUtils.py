@@ -1,5 +1,5 @@
 import sys
-from Pieces import Position as Pos
+from PiecesFolder import Position as Pos
 
 num_of_rows = 8
 
