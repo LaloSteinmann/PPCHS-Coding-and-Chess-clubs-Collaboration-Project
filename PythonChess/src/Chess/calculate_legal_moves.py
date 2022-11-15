@@ -221,17 +221,23 @@ def calculate_pawn_moves(tiles, pawn: Pawn, row, col):
             move = final_pos
             pawn.add_move(final_pos, tile_num)
 
-def get_king_tile(tiles):
+def get_king_tile(tiles, color):
     for row in range(ROWS):
         for col in range(COLUMNS):
-            if isinstance(tiles[row][col].piece_on_tile, King):
+            if isinstance(tiles[row][col].piece_on_tile, King) and tiles[row][col].piece_on_tile.color == color:
                 return Tile(row, col)
+
+def return_opposite_color(color):
+    if color == 'white':
+        return 'black'
+    else:
+        return 'white'
 
 def is_king_in_check(tiles, king: King, king_row, king_col):
     for row in range(ROWS):
         for col in range(COLUMNS):
             if tiles[row][col].piece_on_tile != None:
-                calculate_legal_moves(tiles, tiles[king_row][king_col].piece_on_tile, row, col)
+                calculate_legal_moves(tiles, tiles[row][col].piece_on_tile, row, col)
                 tile_num_of_king = return_tile_num(tiles[row][col])
                 if tile_num_of_king in tiles[row][col].piece_on_tile.tile_num_of_moves:
                     king.in_check = True

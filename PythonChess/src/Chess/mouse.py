@@ -1,7 +1,5 @@
 import pygame as pg
-from calculate_legal_moves import return_tile_num
-from calculate_legal_moves import is_king_in_check
-from calculate_legal_moves import get_king_tile
+from calculate_legal_moves import *
 from constants import *
 from pieces import Piece
 from pieces import Pawn
@@ -45,11 +43,11 @@ class Mouse():
         current_col = int(self.mouseX / TILE_SIZE)
         current_row = int(self.mouseY / TILE_SIZE)
         #if self.tiles[current_row][current_col] in self.piece.moves:
-        king_tile = get_king_tile(self.tiles)
-        in_check = is_king_in_check(self.tiles, self.tiles[king_tile.row][king_tile.col].piece_on_tile, king_tile.row, king_tile.col)
+        # king_tile = get_king_tile(self.tiles, return_opposite_color(self.piece.color))
+        # in_check = is_king_in_check(self.tiles, self.tiles[king_tile.row][king_tile.col].piece_on_tile, king_tile.row, king_tile.col)
         if self.piece != None and (current_row < 8 and current_row >= 0) and (current_col < 8 and current_col >= 0):
             tile_num = return_tile_num(self.tiles[current_row][current_col])
-            if tile_num in self.piece.tile_num_of_moves and not in_check:
+            if tile_num in self.piece.tile_num_of_moves:
                 if isinstance(self.piece, Pawn):
                     if current_row == (self.initial_row + (2 * self.piece.dir)):
                         self.piece.jumped_two_tiles = True
