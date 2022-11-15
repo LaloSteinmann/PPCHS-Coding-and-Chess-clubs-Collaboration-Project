@@ -1,6 +1,8 @@
+from tile import Tile
+
 
 #Screen Dimensions
-SCREEN_WIDTH = 800
+SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 800
 
 WHITE_PAWN_IMAGE = 'PieceImages/white_pawn80x80.png'
@@ -22,4 +24,4 @@ ROWS = 8
 COLUMNS = 8
 
 #Size of a single tile
-TILE_SIZE = SCREEN_WIDTH // COLUMNS
+TILE_SIZE = (SCREEN_WIDTH * 0.8) // COLUMNS

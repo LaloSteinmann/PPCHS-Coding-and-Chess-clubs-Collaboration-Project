@@ -1,4 +1,5 @@
 from abc import abstractmethod
+from constants import *
 import os
 
 #The piece class from which all piece types will inherit from
@@ -17,13 +18,20 @@ class Piece():
         self.img = img
         self.set_texture()
         self.img_rect = img_rect
+        self.moves = []
+        self.tile_num_of_moves = []
+        self.moved = False
     
     #this method will be used to calculate the legal moves respectively for each type of piece.
-    def calculate_legal_moves(self):
-        pass
+    # def calculate_legal_moves(self):
+    #     pass
 
     def set_texture(self):
         self.img = os.path.join(f'PieceImages/{self.color}_{self.name}80x80.png')
+
+    def add_move(self, move, tile_num):
+        self.moves.append(move)
+        self.tile_num_of_moves.append(tile_num)
 
 class Knight(Piece):
     
@@ -34,8 +42,8 @@ class Knight(Piece):
         else:
             self.dir = 1
     
-    def calculate_legal_moves(self):
-        legal_moves = []
+    # method to calculate the legal moves for a knight
+    
 
 class Bishop(Piece):
     def __init__(self, color: chr):
@@ -44,9 +52,6 @@ class Bishop(Piece):
             self.dir = -1
         else:
             self.dir = 1
-    
-    def calculate_legal_moves(self):
-        legal_moves = []
 
 class Rook(Piece):
     def __init__(self, color: chr):
@@ -55,9 +60,6 @@ class Rook(Piece):
             self.dir = -1
         else:
             self.dir = 1
-    
-    def calculate_legal_moves(self):
-        legal_moves = []
 
 class Queen(Piece):
     def __init__(self, color: chr):
@@ -67,27 +69,20 @@ class Queen(Piece):
         else:
             self.dir = 1
 
-    def calculate_legal_moves(self):
-        legal_moves = []
-
 class King(Piece):
     def __init__(self, color: chr):
         super().__init__('king', color, 9001.0)
+        self.in_check = False
         if color == 'white':
             self.dir = -1
         else:
             self.dir = 1
-         
-    def calculate_legal_moves(self):
-        legal_moves = []
 
 class Pawn(Piece):
     def __init__(self, color: chr):
         super().__init__('pawn', color, 1.0)
+        self.jumped_two_tiles = False
         if color == 'white':
             self.dir = -1
         else:
             self.dir = 1
-    
-    def calculate_legal_moves(self):
-        legal_moves = []

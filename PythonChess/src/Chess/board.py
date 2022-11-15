@@ -2,12 +2,14 @@ import pygame as pg
 from tile import *
 from constants import *
 from pieces import *
+from mouse import Mouse
 
 class Board:
     def __init__(self):
         self.tiles = [[None, None, None, None, None, None, None, None] for col in range(COLUMNS)]
         self.set_up_empty_board()
         self.put_pieces()
+        self.mouse = Mouse(self.tiles)
 
     #method to display the board
     def display_board(self, screen):
@@ -26,16 +28,31 @@ class Board:
             for col in range(COLUMNS):
                 if self.tiles[row][col].is_tile_occupied():
                     piece = self.tiles[row][col].piece_on_tile
-                    img = pg.image.load(piece.img)
-                    img_centering = col * TILE_SIZE + (TILE_SIZE / 2), row * TILE_SIZE + (TILE_SIZE / 2)
-                    piece.img_rect = img.get_rect(center = img_centering)
-                    screen.blit(img, piece.img_rect)
+                    
+                    #all pieces except the piece being dragged by the mouse
+                    if piece is not self.mouse.piece:
+                        img = pg.image.load(piece.img)
+                        img_centering = col * TILE_SIZE + (TILE_SIZE / 2), row * TILE_SIZE + (TILE_SIZE / 2)
+                        piece.img_rect = img.get_rect(center = img_centering)
+                        screen.blit(img, piece.img_rect)
+
+    def show_moves(self, screen):
+        
+        if self.mouse.dragging:
+            piece = self.mouse.piece
+
+            # for move in piece.moves:
+
+            #     #color
 
     #Sets up an empty board with empty tiles
     def set_up_empty_board(self):
         for row in range(ROWS):
             for col in range(COLUMNS):
                 self.tiles[row][col] = Tile(row, col)
+
+    def get_tile(self, row, col):
+        return self.tiles[row, col]
 
     #sets the pieces on the tiles list
     def put_pieces(self):
