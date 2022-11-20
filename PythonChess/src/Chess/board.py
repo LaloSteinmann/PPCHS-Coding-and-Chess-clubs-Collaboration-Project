@@ -2,6 +2,7 @@ import pygame as pg
 from tile import *
 from constants import *
 from pieces import *
+from calculate_legal_moves import return_tile_num, return_row_and_col
 from mouse import Mouse
 
 class Board:
@@ -33,17 +34,8 @@ class Board:
                     if piece is not self.mouse.piece:
                         img = pg.image.load(piece.img)
                         img_centering = col * TILE_SIZE + (TILE_SIZE / 2), row * TILE_SIZE + (TILE_SIZE / 2)
-                        piece.img_rect = img.get_rect(center = img_centering)
+                        piece.img_rect = img.get_rect(center=img_centering)
                         screen.blit(img, piece.img_rect)
-
-    def show_moves(self, screen):
-        
-        if self.mouse.dragging:
-            piece = self.mouse.piece
-
-            # for move in piece.moves:
-
-            #     #color
 
     #Sets up an empty board with empty tiles
     def set_up_empty_board(self):
@@ -53,6 +45,17 @@ class Board:
 
     def get_tile(self, row, col):
         return self.tiles[row, col]
+
+    def show_moves(self, piece: Piece, screen):
+        for tile_num in piece.tile_num_of_moves:
+            highlight_row, highlight_col = return_row_and_col(tile_num)
+            if self.tiles[highlight_row][highlight_col].has_enemy_piece(piece.color):
+                img = pg.image.load('PieceImages/white_circle.png')
+            else:
+                img = pg.image.load('PieceImages/gray_dot.png')
+            img_centering = highlight_col * TILE_SIZE + (TILE_SIZE / 2), highlight_row * TILE_SIZE + (TILE_SIZE / 2)
+            img_rect = img.get_rect(center=img_centering)
+            screen.blit(img, img_rect)
 
     #sets the pieces on the tiles list
     def put_pieces(self):

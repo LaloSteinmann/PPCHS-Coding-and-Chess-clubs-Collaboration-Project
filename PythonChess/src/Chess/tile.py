@@ -18,7 +18,8 @@ class Tile():
         return self.piece_on_tile != None
 
     def has_enemy_piece(self, color):
-        return self.piece_on_tile.color != color
+        if self.piece_on_tile != None:
+            return self.piece_on_tile.color != color
 
 def is_valid_coordinate(row, col):
     return (row < 8 and row >= 0) and (col < 8 and col >= 0)

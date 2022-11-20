@@ -44,7 +44,7 @@ class Mouse():
         current_row = int(self.mouseY / TILE_SIZE)
         #if self.tiles[current_row][current_col] in self.piece.moves:
         # king_tile = get_king_tile(self.tiles, return_opposite_color(self.piece.color))
-        # in_check = is_king_in_check(self.tiles, self.tiles[king_tile.row][king_tile.col].piece_on_tile, king_tile.row, king_tile.col)
+        # in_check = is_king_in_check(self.tiles, self.tiles[king_tile.row][king_tile.col].piece_on_tile)
         if self.piece != None and (current_row < 8 and current_row >= 0) and (current_col < 8 and current_col >= 0):
             tile_num = return_tile_num(self.tiles[current_row][current_col])
             if tile_num in self.piece.tile_num_of_moves:
@@ -52,9 +52,11 @@ class Mouse():
                     if current_row == (self.initial_row + (2 * self.piece.dir)):
                         self.piece.jumped_two_tiles = True
                     elif (current_row == self.initial_row + self.piece.dir and current_col == self.initial_col + 1):
-                        self.tiles[self.initial_row][self.initial_col + 1].piece_on_tile = None
-                    elif (current_row == self.initial_row + self.piece.dir and current_col == self.initial_col - 1):
-                        self.tiles[self.initial_row][self.initial_col - 1].piece_on_tile = None
+                        if self.tiles[self.initial_row][self.initial_col + 1].has_enemy_piece(self.piece.color):
+                            self.tiles[self.initial_row][self.initial_col + 1].piece_on_tile = None
+                    if (current_row == self.initial_row + self.piece.dir and current_col == self.initial_col - 1):
+                        if self.tiles[self.initial_row][self.initial_col - 1].has_enemy_piece(self.piece.color):
+                            self.tiles[self.initial_row][self.initial_col - 1].piece_on_tile = None
                 self.piece.moved = True 
                 self.tiles[current_row][current_col] = Tile(current_row, current_col, self.piece)
                 # if self.tiles[current_row][current_col].is_tile_occupied() and self.tiles[current_row][current_col].has_enemy_piece(self.piece.color):

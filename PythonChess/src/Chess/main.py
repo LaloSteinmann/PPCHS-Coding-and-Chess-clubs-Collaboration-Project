@@ -26,6 +26,7 @@ class Main:
             board.display_pieces(screen)
 
             if mouse.dragging:
+                board.show_moves(piece, screen)
                 mouse.update_blit(screen)
 
             for event in pg.event.get():
@@ -44,6 +45,7 @@ class Main:
                         if board.tiles[clicked_row][clicked_column].is_tile_occupied():
                             piece = board.tiles[clicked_row][clicked_column].piece_on_tile
                             calculate_legal_moves(board.tiles, piece, clicked_row, clicked_column)
+                            board.show_moves(piece, screen)
                             mouse.save_initial_pos(event.pos)
                             mouse.drag_piece(piece)
 
@@ -52,6 +54,7 @@ class Main:
                         mouse.update_mouse(event.pos)
                         board.display_board(screen)
                         board.display_pieces(screen)
+                        board.show_moves(piece, screen)
                         mouse.update_blit(screen)
                 elif event.type == pg.MOUSEBUTTONUP: #drop
                     mouse.drop_piece()
