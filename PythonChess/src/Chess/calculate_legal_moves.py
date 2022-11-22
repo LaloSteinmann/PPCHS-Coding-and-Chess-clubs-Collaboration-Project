@@ -236,21 +236,39 @@ def get_king_tile(tiles, color):
             if isinstance(tiles[row][col].piece_on_tile, King) and tiles[row][col].piece_on_tile.color == color:
                 return Tile(row, col)
 
+def get_king_tile_num(tiles, color):
+    running_total = 0
+    for row in range(ROWS):
+        for col in range(COLUMNS):
+            if isinstance(tiles[row][col].piece_on_tile, King) and tiles[row][col].piece_on_tile.color == color:
+                return running_total
+            running_total += 1
+
 def return_opposite_color(color):
     if color == 'white':
         return 'black'
     else:
         return 'white'
 
-def is_king_in_check(tiles, king: King):
+def get_king(tiles, color):
     for row in range(ROWS):
         for col in range(COLUMNS):
             if tiles[row][col].piece_on_tile != None:
-                calculate_legal_moves(tiles, tiles[row][col].piece_on_tile, row, col)
-                tile_num_of_king = return_tile_num(tiles[row][col])
-                if tile_num_of_king in tiles[row][col].piece_on_tile.tile_num_of_moves:
-                    king.in_check = True
-            return king.in_check
+                if isinstance(tiles[row][col].piece_on_tile, King) and tiles[row][col].piece_on_tile.color == color:
+                    king = tiles[row][col].piece_on_tile
+                    return king
+
+def is_king_in_check(tiles, king: King):
+    king.in_check = False
+    for row in range(ROWS):
+        for col in range(COLUMNS):
+            if tiles[row][col].piece_on_tile != None:
+                if tiles[row][col].piece_on_tile.color != king.color:
+                    calculate_legal_moves(tiles, tiles[row][col].piece_on_tile, row, col)
+                    tile_num_of_king = get_king_tile_num(tiles, king.color)
+                    if tile_num_of_king in tiles[row][col].piece_on_tile.tile_num_of_moves:
+                        king.in_check = True
+    return king.in_check
 
 def calculate_king_moves(tiles, king: King, row, col):
     #The way the knight moves applied to our current position

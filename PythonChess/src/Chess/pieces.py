@@ -73,6 +73,8 @@ class King(Piece):
     def __init__(self, color: chr):
         super().__init__('king', color, 9001.0)
         self.in_check = False
+        self.in_stalemate = False
+        self.in_checkmate = False
         if color == 'white':
             self.dir = -1
         else:

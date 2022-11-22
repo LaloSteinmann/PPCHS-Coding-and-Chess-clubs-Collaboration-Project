@@ -23,5 +23,8 @@ BLACK_QUEEN_IMAGE = 'PieceImages/black_queen80x80.png'
 ROWS = 8
 COLUMNS = 8
 
+WHITE = 'white'
+BLACK = 'black'
+
 #Size of a single tile
 TILE_SIZE = (SCREEN_WIDTH * 0.8) // COLUMNS
