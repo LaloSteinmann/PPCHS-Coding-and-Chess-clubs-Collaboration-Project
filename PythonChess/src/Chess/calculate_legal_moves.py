@@ -3,6 +3,12 @@ from move import Move
 from tile import *
 from constants import *
 
+def calculate_legal_moves_loop(piece_list, tiles):
+    for piece in piece_list:
+        piece.tile_num_of_moves.clear()
+        piece.moves.clear()
+        calculate_legal_moves(tiles, piece, piece.row, piece.col)
+
 def return_tile_num(tile: Tile):
     running_total = 0
     for row in range(ROWS):
@@ -61,7 +67,7 @@ def calculate_knight_moves(tiles, knight: Knight, row, col):
                 knight.add_move(move, tile_num)
             #checks for the second possibility; if the tile is occupied, but the piece on it is an enemy piece
             else:
-                if possible_destination.has_enemy_piece(knight.color):
+                if possible_destination.piece_on_tile.color != knight.color:
                     knight.add_move(move, tile_num)
 
 def calculate_bishop_moves(tiles, bishop: Bishop, row, col):
@@ -166,11 +172,18 @@ def calculate_queen_moves(tiles, queen: Queen, row, col):
                     tile_num = return_tile_num(final_pos)
                     #creates our new possible tile that we will land on
                     possible_destination: Tile = get_tile(tiles, possible_row, possible_col)
+                    
                     if not possible_destination.is_tile_occupied():
-                        queen.add_move(move, tile_num)
+                        # king = get_king(tiles, queen.color)
+                        # if (not is_king_in_check(tiles, king)) or (is_king_in_check(tiles, king)
+                        # and would_remove_check(tiles, queen.color, queen, possible_row, possible_col)):
+                            queen.add_move(move, tile_num)
                     else:
                         if possible_destination.has_enemy_piece(queen.color):
-                            queen.add_move(move, tile_num)
+                            # king = get_king(tiles, queen.color)
+                            # if (not is_king_in_check(tiles, king)) or (is_king_in_check(tiles, king)
+                            # and would_remove_check(tiles, queen.color, queen, possible_row, possible_col)):
+                                queen.add_move(move, tile_num)
                         break
 
 def calculate_pawn_moves(tiles, pawn: Pawn, row, col):
@@ -229,46 +242,6 @@ def calculate_pawn_moves(tiles, pawn: Pawn, row, col):
             tile_num = return_tile_num(final_pos)
             move = final_pos
             pawn.add_move(final_pos, tile_num)
-
-def get_king_tile(tiles, color):
-    for row in range(ROWS):
-        for col in range(COLUMNS):
-            if isinstance(tiles[row][col].piece_on_tile, King) and tiles[row][col].piece_on_tile.color == color:
-                return Tile(row, col)
-
-def get_king_tile_num(tiles, color):
-    running_total = 0
-    for row in range(ROWS):
-        for col in range(COLUMNS):
-            if isinstance(tiles[row][col].piece_on_tile, King) and tiles[row][col].piece_on_tile.color == color:
-                return running_total
-            running_total += 1
-
-def return_opposite_color(color):
-    if color == 'white':
-        return 'black'
-    else:
-        return 'white'
-
-def get_king(tiles, color):
-    for row in range(ROWS):
-        for col in range(COLUMNS):
-            if tiles[row][col].piece_on_tile != None:
-                if isinstance(tiles[row][col].piece_on_tile, King) and tiles[row][col].piece_on_tile.color == color:
-                    king = tiles[row][col].piece_on_tile
-                    return king
-
-def is_king_in_check(tiles, king: King):
-    king.in_check = False
-    for row in range(ROWS):
-        for col in range(COLUMNS):
-            if tiles[row][col].piece_on_tile != None:
-                if tiles[row][col].piece_on_tile.color != king.color:
-                    calculate_legal_moves(tiles, tiles[row][col].piece_on_tile, row, col)
-                    tile_num_of_king = get_king_tile_num(tiles, king.color)
-                    if tile_num_of_king in tiles[row][col].piece_on_tile.tile_num_of_moves:
-                        king.in_check = True
-    return king.in_check
 
 def calculate_king_moves(tiles, king: King, row, col):
     #The way the knight moves applied to our current position

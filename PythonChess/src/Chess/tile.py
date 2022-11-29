@@ -3,7 +3,7 @@ from pieces import *
 class Tile():
 
     #constructor for the tile
-    def __init__(self, row: int, col: int, piece_on_tile: Piece = None):
+    def __init__(self, row: int, col: int, piece_on_tile = None):
         self.row = row
         self.col = col
         self.piece_on_tile = piece_on_tile

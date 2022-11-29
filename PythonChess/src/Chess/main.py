@@ -24,6 +24,7 @@ class Main:
         while True:
             board.display_board(screen)
             board.display_pieces(screen)
+            calculate_legal_moves_loop(board.piece_list, board.tiles)
 
             if mouse.dragging:
                 board.show_moves(piece, screen)
@@ -44,10 +45,11 @@ class Main:
                     if clicked_column < 8 and clicked_row < 8:
                         if board.tiles[clicked_row][clicked_column].is_tile_occupied():
                             piece = board.tiles[clicked_row][clicked_column].piece_on_tile
-                            calculate_legal_moves(board.tiles, piece, clicked_row, clicked_column)
+                            # calculate_legal_moves(board.tiles, piece, clicked_row, clicked_column)
                             board.show_moves(piece, screen)
                             mouse.save_initial_pos(event.pos)
                             mouse.drag_piece(piece)
+                            mouse.save_piece_pos()
 
                 elif event.type == pg.MOUSEMOTION: #drag
                     if mouse.dragging:

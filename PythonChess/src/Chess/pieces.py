@@ -7,7 +7,7 @@ import os
 #and a number that is either 1 or 0 representing whether they are
 #part of the white or black pieces
 class Piece():
-    def __init__(self, name, color, value, img=None, img_rect=None):
+    def __init__(self, name, color, value, row, col, img=None, img_rect=None):
         self.color = color
         self.name = name
         if color == 'white':
@@ -21,6 +21,8 @@ class Piece():
         self.moves = []
         self.tile_num_of_moves = []
         self.moved = False
+        self.row = row
+        self.col = col
     
     #this method will be used to calculate the legal moves respectively for each type of piece.
     # def calculate_legal_moves(self):
@@ -35,8 +37,8 @@ class Piece():
 
 class Knight(Piece):
     
-    def __init__(self, color: chr):
-        super().__init__('knight', color, 3.0)
+    def __init__(self, color: chr, row, col):
+        super().__init__('knight', color, 3.0, row, col)
         if color == 'white':
             self.dir = -1
         else:
@@ -46,32 +48,32 @@ class Knight(Piece):
     
 
 class Bishop(Piece):
-    def __init__(self, color: chr):
-        super().__init__('bishop', color, 3.0001)
+    def __init__(self, color: chr, row, col):
+        super().__init__('bishop', color, 3.0001, row, col)
         if color == 'white':
             self.dir = -1
         else:
             self.dir = 1
 
 class Rook(Piece):
-    def __init__(self, color: chr):
-        super().__init__('rook', color, 5.0)    
+    def __init__(self, color: chr, row, col):
+        super().__init__('rook', color, 5.0, row, col)    
         if color == 'white':
             self.dir = -1
         else:
             self.dir = 1
 
 class Queen(Piece):
-    def __init__(self, color: chr):
-        super().__init__('queen', color, 9.0)    
+    def __init__(self, color: chr, row, col):
+        super().__init__('queen', color, 9.0, row, col)    
         if color == 'white':
             self.dir = -1
         else:
             self.dir = 1
 
 class King(Piece):
-    def __init__(self, color: chr):
-        super().__init__('king', color, 9001.0)
+    def __init__(self, color: chr, row, col):
+        super().__init__('king', color, 9001.0, row, col)
         self.in_check = False
         self.in_stalemate = False
         self.in_checkmate = False
@@ -81,8 +83,8 @@ class King(Piece):
             self.dir = 1
 
 class Pawn(Piece):
-    def __init__(self, color: chr):
-        super().__init__('pawn', color, 1.0)
+    def __init__(self, color: chr, row, col):
+        super().__init__('pawn', color, 1.0, row, col)
         self.jumped_two_tiles = False
         if color == 'white':
             self.dir = -1
