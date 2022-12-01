@@ -59,7 +59,7 @@ class Mouse():
             in_check = is_king_in_check(self.tiles, king)
             tile_num = return_tile_num(self.tiles[current_row][current_col])
             if tile_num in self.piece.tile_num_of_moves:
-                if (not in_check) or (in_check and would_remove_check(self.tiles, self.piece.color, self.piece, current_row, current_col)):
+                if (not in_check and not would_put_in_check(self.tiles, self.piece.color, self.piece, current_row, current_col)) or (in_check and would_remove_check(self.tiles, self.piece.color, self.piece, current_row, current_col)):
                     if isinstance(self.piece, Pawn):
                         if current_row == (self.initial_row + (2 * self.piece.dir)):
                             self.piece.jumped_two_tiles = True

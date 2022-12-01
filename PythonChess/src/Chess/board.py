@@ -56,7 +56,7 @@ class Board:
             highlight_row, highlight_col = return_row_and_col(tile_num)
             king = get_king(self.tiles, piece.color)
             in_check = king.in_check
-            if (not in_check) or (in_check and would_remove_check(self.tiles, piece.color, piece, highlight_row, highlight_col)):
+            if (not in_check and not would_put_in_check(self.tiles, piece.color, piece, highlight_row, highlight_col)) or (in_check and would_remove_check(self.tiles, piece.color, piece, highlight_row, highlight_col)):
                 if self.tiles[highlight_row][highlight_col].has_enemy_piece(piece.color):
                     img = pg.image.load('PieceImages/white_circle.png')
                 else:

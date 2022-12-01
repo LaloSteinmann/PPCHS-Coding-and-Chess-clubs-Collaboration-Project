@@ -40,6 +40,27 @@ def is_king_in_check(tiles, king: King):
                     king.in_check = True
     return king.in_check
 
+def would_put_in_check(tiles, color, piece, move_row, move_col):
+    temp_board = copy.deepcopy(tiles)
+    # temp_board = tiles.copy()
+    temp_board[move_row][move_col].piece_on_tile = piece
+    temp_board[piece.row][piece.col].piece_on_tile = None
+    king = get_king(tiles, color)
+    temp_king = copy.deepcopy(king)
+    # for row in range(ROWS):
+    #     for col in range(COLUMNS):
+    #         if temp_board[row][col].piece_on_tile != None and temp_board[row][col].piece_on_tile.color != king.color:
+    #             temp_board[row][col].piece_on_tile.tile_num_of_moves.clear()
+    #             calculate_legal_moves(temp_board, temp_board[row][col].piece_on_tile, row, col)
+    # king = get_king(tiles, color)
+    in_check = is_king_in_check(temp_board, temp_king)
+    if in_check:
+        temp_board[move_row][move_col].piece_on_tile = None
+        return True
+    else:
+        temp_board[move_row][move_col].piece_on_tile = None
+        return False
+
 def would_remove_check(tiles, color, piece, move_row, move_col):
     temp_board = copy.deepcopy(tiles)
     # temp_board = tiles.copy()
