@@ -15,7 +15,7 @@ class Board:
         self.piece_list = []
         self.set_up_empty_board()
         self.put_pieces()
-        self.mouse = Mouse(self.tiles)
+        self.mouse = Mouse(self.tiles, self.piece_list)
 
     #method to display the board
     def display_board(self, screen):

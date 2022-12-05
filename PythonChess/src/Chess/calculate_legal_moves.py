@@ -8,15 +8,12 @@ def calculate_legal_moves_loop(piece_list, tiles):
         piece.tile_num_of_moves.clear()
         piece.moves.clear()
         calculate_legal_moves(tiles, piece, piece.row, piece.col)
+    
 
 def return_tile_num(tile: Tile):
-    running_total = 0
-    for row in range(ROWS):
-        for col in range(COLUMNS):
-            if tile.row == row and tile.col == col:
-                tile_num = running_total
-                return tile_num
-            running_total += 1
+    tile_row = tile.row * 8
+    tile_num = tile_row + tile.col
+    return tile_num
 
 def return_row_and_col(tile_num: int):
     running_total = 0
@@ -250,7 +247,7 @@ def calculate_king_moves(tiles, king: King, row, col):
                     (row - king.dir, col - 1),
                     (row + king.dir, col - 1),
                     (row, col + 1),
-                    (row, col -1),
+                    (row, col - 1),
                     (row + king.dir, col),
                     (row - king.dir, col)
                   ]

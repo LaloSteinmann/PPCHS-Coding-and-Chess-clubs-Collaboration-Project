@@ -77,6 +77,7 @@ class King(Piece):
         self.in_check = False
         self.in_stalemate = False
         self.in_checkmate = False
+        self.tile_num = 0
         if color == 'white':
             self.dir = -1
         else:

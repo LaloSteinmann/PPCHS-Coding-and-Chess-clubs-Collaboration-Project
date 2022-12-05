@@ -29,16 +29,40 @@ def get_king(tiles, color):
 
 def is_king_in_check(tiles, king: King):
     king.in_check = False
-    tile_num_of_king = get_king_tile_num(tiles, king.color)
+    king.tile_num = get_king_tile_num(tiles, king.color)
     for row in range(ROWS):
         for col in range(COLUMNS):
             if tiles[row][col].piece_on_tile != None and tiles[row][col].piece_on_tile.color != king.color:
                 tiles[row][col].piece_on_tile.tile_num_of_moves.clear()
                 tiles[row][col].piece_on_tile.moves.clear()
                 calculate_legal_moves(tiles, tiles[row][col].piece_on_tile, row, col)
-                if tile_num_of_king in tiles[row][col].piece_on_tile.tile_num_of_moves:
+                if king.tile_num in tiles[row][col].piece_on_tile.tile_num_of_moves:
                     king.in_check = True
     return king.in_check
+
+def in_check_mate(tiles, piece_list, king):
+    if is_king_in_check(tiles, king):
+        for piece in piece_list:
+            if piece.color == king.color:
+                for move_tile in piece.tile_num_of_moves:
+                    move_row, move_col = return_row_and_col(move_tile)
+                    if would_remove_check(tiles, king.color, piece, move_row, move_col):
+                        king.in_checkmate = False
+                        return king.in_checkmate
+                        # return king.in_checkmate
+                    else:
+                        king.in_checkmate = True
+        return king.in_checkmate
+
+def in_mate(tiles, piece_list, king):
+    in_mate_bool = True
+    for piece in piece_list:
+        if piece.color == king.color:
+            for move_tile in piece.tile_num_of_moves:
+                move_row, move_col = return_row_and_col(move_tile)
+                if would_remove_check(tiles, king.color, piece, move_row, move_col):
+                    return False
+    return in_mate_bool
 
 def would_put_in_check(tiles, color, piece, move_row, move_col):
     temp_board = copy.deepcopy(tiles)
@@ -76,10 +100,8 @@ def would_remove_check(tiles, color, piece, move_row, move_col):
     # king = get_king(tiles, color)
     in_check = is_king_in_check(temp_board, temp_king)
     if in_check:
-        temp_board[move_row][move_col].piece_on_tile = None
         return False
     else:
-        temp_board[move_row][move_col].piece_on_tile = None
         return True
 
 def return_opposite_color(color):
