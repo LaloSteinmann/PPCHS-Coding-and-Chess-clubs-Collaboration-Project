@@ -1,7 +1,9 @@
 from pieces import *
-from move import Move
 from tile import *
 from constants import *
+import pygame as pg
+import sys as system
+from button import *
 
 def calculate_legal_moves_loop(piece_list, tiles):
     for piece in piece_list:
@@ -9,6 +11,63 @@ def calculate_legal_moves_loop(piece_list, tiles):
         piece.moves.clear()
         calculate_legal_moves(tiles, piece, piece.row, piece.col)
     
+# def pawn_promotion(mouse, tiles, pawn, screen, piece_list):
+#     while True:
+#         mouse.update_mouse(pg.mouse.get_pos())
+#         for row in range(pawn.row, pawn.row - 3):
+#             color = 'aliceblue'
+#             rect = (pawn.col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+#             pg.draw.rect(screen, color, rect)
+#             if row == pawn.row:
+#                 img = pg.image.load(os.path.join(f'PieceImages/{pawn.color}_queen80x80.png'))
+#                 img_centering = pawn.col * TILE_SIZE + (TILE_SIZE / 2), row * TILE_SIZE + (TILE_SIZE / 2)
+#                 img_rect = img.get_rect(center=img_centering)
+#                 screen.blit(img, img_rect)
+#             elif row == pawn.row - 1:
+#                 img = pg.image.load(os.path.join(f'PieceImages/{pawn.color}_rook80x80.png'))
+#                 img_centering = pawn.col * TILE_SIZE + (TILE_SIZE / 2), row * TILE_SIZE + (TILE_SIZE / 2)
+#                 img_rect = img.get_rect(center=img_centering)
+#                 screen.blit(img, img_rect)
+#             elif row == pawn.row - 2:
+#                 img = pg.image.load(os.path.join(f'PieceImages/{pawn.color}_bishop80x80.png'))
+#                 img_centering = pawn.col * TILE_SIZE + (TILE_SIZE / 2), row * TILE_SIZE + (TILE_SIZE / 2)
+#                 img_rect = img.get_rect(center=img_centering)
+#                 screen.blit(img, img_rect)
+#             elif row == pawn.row - 3:
+#                 img = pg.image.load(os.path.join(f'PieceImages/{pawn.color}_knight80x80.png'))
+#                 img_centering = pawn.col * TILE_SIZE + (TILE_SIZE / 2), row * TILE_SIZE + (TILE_SIZE / 2)
+#                 img_rect = img.get_rect(center=img_centering)
+#                 screen.blit(img, img_rect)
+
+#         current_col = int(mouse.mouseX / TILE_SIZE)
+#         current_row = int(mouse.mouseY / TILE_SIZE)
+
+#         if current_row == pawn.row and current_col == pawn.col:
+#             piece_list.remove(pawn)
+#             tiles[pawn.row][pawn.col].piece_on_tile = Queen(pawn.color, pawn.row, pawn.col)
+#             new_piece = tiles[pawn.row][pawn.col].piece_on_tile
+#             piece_list.append(pawn)
+#             return
+#         elif current_row - 1 == pawn.row and current_col == pawn.col:
+#             piece_list.remove(pawn)
+#             tiles[pawn.row][pawn.col].piece_on_tile = Rook(pawn.color, pawn.row, pawn.col)
+#             new_piece = tiles[pawn.row][pawn.col].piece_on_tile
+#             piece_list.append(new_piece)
+#             return
+#         elif current_row - 2 == pawn.row and current_col == pawn.col:
+#             piece_list.remove(pawn)
+#             tiles[pawn.row][pawn.col].piece_on_tile = Bishop(pawn.color, pawn.row, pawn.col)
+#             new_piece = tiles[pawn.row][pawn.col].piece_on_tile
+#             piece_list.append(pawn)
+#             return
+#         elif current_row - 3 == pawn.row and current_col == pawn.col:
+#             piece_list.remove(pawn)
+#             tiles[pawn.row][pawn.col].piece_on_tile = Knight(pawn.color, pawn.row, pawn.col)
+#             new_piece = tiles[pawn.row][pawn.col].piece_on_tile
+#             piece_list.append(pawn)
+#             return
+
+#         pg.display.update()
 
 def return_tile_num(tile: Tile):
     tile_row = tile.row * 8
@@ -199,6 +258,7 @@ def calculate_pawn_moves(tiles, pawn: Pawn, row, col):
                 move = final_pos
                 tile_num = return_tile_num(final_pos)
                 pawn.add_move(move, tile_num)
+                pawn.en_passant = True
             
         if is_valid_coordinate(row, possible_col_left):
             if tiles[row][possible_col_left].is_tile_occupied() and (isinstance(tiles[row][possible_col_left].get_piece(), Pawn) 
@@ -208,6 +268,7 @@ def calculate_pawn_moves(tiles, pawn: Pawn, row, col):
                 tile_num = return_tile_num(final_pos)
                 move = final_pos
                 pawn.add_move(move, tile_num)
+                pawn.en_passant = True
 
     elif (not pawn.moved) and (not tiles[row + pawn.dir][col].is_tile_occupied()) and (not tiles[row + (2 * pawn.dir)][col].is_tile_occupied()):
         #current_pos = Tile(row, col)
@@ -239,6 +300,69 @@ def calculate_pawn_moves(tiles, pawn: Pawn, row, col):
             tile_num = return_tile_num(final_pos)
             move = final_pos
             pawn.add_move(final_pos, tile_num)
+
+def pawn_promotion(screen, pawn, tiles, piece_list):
+
+    while True:
+
+        menu_pos = pg.mouse.get_pos()
+
+        queen_button = Promotion_Button((pawn.col * TILE_SIZE + (TILE_SIZE / 2), 
+        (pawn.row - (pawn.dir * 1)) * TILE_SIZE + (TILE_SIZE / 2)), pawn.color, 'queen',
+        ((pawn.col * TILE_SIZE), (pawn.row - (pawn.dir * 1)) * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+
+        rook_button = Promotion_Button((pawn.col * TILE_SIZE + (TILE_SIZE / 2), 
+        (pawn.row - (pawn.dir * 2)) * TILE_SIZE + (TILE_SIZE / 2)), pawn.color, 'rook',
+        ((pawn.col * TILE_SIZE), (pawn.row - (pawn.dir * 2)) * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+        
+        bishop_button = Promotion_Button((pawn.col * TILE_SIZE + (TILE_SIZE / 2), 
+        (pawn.row - (pawn.dir * 3)) * TILE_SIZE + (TILE_SIZE / 2)), pawn.color, 'bishop',
+        ((pawn.col * TILE_SIZE), (pawn.row - (pawn.dir * 3)) * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+
+        knight_button = Promotion_Button((pawn.col * TILE_SIZE + (TILE_SIZE / 2), 
+        (pawn.row - (pawn.dir * 4)) * TILE_SIZE + (TILE_SIZE / 2)), pawn.color, 'knight',
+        ((pawn.col * TILE_SIZE), (pawn.row - (pawn.dir * 4)) * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+        
+        # screen.blit(menu_text, menu_rect)
+
+        for piece in [queen_button, rook_button, bishop_button, knight_button]:
+            piece.update(screen)
+
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+                system.exit()
+
+            if event.type == pg.MOUSEBUTTONDOWN:
+                if queen_button.check_input(menu_pos):
+                    #promote to queen
+                    piece_list.remove(pawn)
+                    tiles[pawn.row][pawn.col].piece_on_tile = Queen(pawn.color, pawn.row, pawn.col)
+                    piece_list.append(tiles[pawn.row][pawn.col].piece_on_tile)
+                    return
+
+                elif rook_button.check_input(menu_pos):
+                    #promote to rook
+                    piece_list.remove(pawn)
+                    tiles[pawn.row][pawn.col].piece_on_tile = Rook(pawn.color, pawn.row, pawn.col)
+                    piece_list.append(tiles[pawn.row][pawn.col].piece_on_tile)
+                    return
+
+                elif bishop_button.check_input(menu_pos):
+                    #promote to bishop
+                    piece_list.remove(pawn)
+                    tiles[pawn.row][pawn.col].piece_on_tile = Bishop(pawn.color, pawn.row, pawn.col)
+                    piece_list.append(tiles[pawn.row][pawn.col].piece_on_tile)
+                    return
+
+                elif knight_button.check_input(menu_pos):
+                    #promote to knight
+                    piece_list.remove(pawn)
+                    tiles[pawn.row][pawn.col].piece_on_tile = Knight(pawn.color, pawn.row, pawn.col)
+                    piece_list.append(tiles[pawn.row][pawn.col].piece_on_tile)
+                    return
+
+        pg.display.update()
 
 def calculate_king_moves(tiles, king: King, row, col):
     #The way the knight moves applied to our current position

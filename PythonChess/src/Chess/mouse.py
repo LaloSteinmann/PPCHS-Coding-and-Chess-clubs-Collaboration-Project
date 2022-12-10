@@ -6,7 +6,7 @@ from pieces import Piece
 from pieces import Pawn
 
 class Mouse():
-    def __init__(self, tiles, piece_list):
+    def __init__(self, tiles, piece_list, screen):
         self.piece: Piece = None
         self.dragging = False
         self.mouseX = 0
@@ -15,6 +15,7 @@ class Mouse():
         self.initial_col = 0
         self.tiles = tiles
         self.piece_list = piece_list
+        self.screen = screen
 
     #blit method
     def update_blit(self, screen):
@@ -44,9 +45,11 @@ class Mouse():
         self.dragging = True
         self.piece = piece
 
-    def move(self):
-        current_col = int(self.mouseX / TILE_SIZE)
-        current_row = int(self.mouseY / TILE_SIZE)
+    def move(self, current_player):
+        self.current_col = int(self.mouseX / TILE_SIZE)
+        self.current_row = int(self.mouseY / TILE_SIZE)
+        current_col = self.current_col
+        current_row = self.current_row
         #if self.tiles[current_row][current_col] in self.piece.moves:
         # king_tile = get_king_tile(self.tiles, return_opposite_color(self.piece.color))
         # in_check = is_king_in_check(self.tiles, self.tiles[king_tile.row][king_tile.col].piece_on_tile)
@@ -61,37 +64,44 @@ class Mouse():
             tile_num = return_tile_num(self.tiles[current_row][current_col])
             if tile_num in self.piece.tile_num_of_moves:
                 if (not in_check and not would_put_in_check(self.tiles, self.piece.color, self.piece, current_row, current_col)) or (in_check and would_remove_check(self.tiles, self.piece.color, self.piece, current_row, current_col)):
-                    if isinstance(self.piece, Pawn):
-                        if current_row == (self.initial_row + (2 * self.piece.dir)):
-                            self.piece.jumped_two_tiles = True
-                        elif (current_row == self.initial_row + self.piece.dir and current_col == self.initial_col + 1):
-                            if self.tiles[self.initial_row][self.initial_col + 1].has_enemy_piece(self.piece.color):
-                                self.piece_list.remove(self.tiles[self.initial_row][self.initial_col + 1].piece_on_tile )
-                                self.tiles[self.initial_row][self.initial_col + 1].piece_on_tile = None
-                        if (current_row == self.initial_row + self.piece.dir and current_col == self.initial_col - 1):
-                            if self.tiles[self.initial_row][self.initial_col - 1].has_enemy_piece(self.piece.color):
-                                self.piece_list.remove(self.tiles[self.initial_row][self.initial_col - 1].piece_on_tile)
-                                self.tiles[self.initial_row][self.initial_col - 1].piece_on_tile = None
-                    self.piece.moved = True 
-                    self.piece.row = current_row
-                    self.piece.col = current_col
-                    if self.tiles[current_row][current_col].piece_on_tile != None and self.tiles[current_row][current_col].piece_on_tile.color != self.piece.color:
-                        self.piece_list.remove(self.tiles[current_row][current_col].piece_on_tile)
-                    self.tiles[current_row][current_col].piece_on_tile = self.piece
-                    # if self.tiles[current_row][current_col].is_tile_occupied() and self.tiles[current_row][current_col].has_enemy_piece(self.piece.color):
-                    #     enemy_piece = self.tiles[current_row][current_col].get_piece()
-                    #     del enemy_piece
-                    self.tiles[self.initial_row][self.initial_col].piece_on_tile = None
-                    
-                    self.piece.moves.clear()
-                    self.piece.tile_num_of_moves.clear()
-                else:
-                    self.piece.tile_num_of_moves.remove(tile_num)
-                    print("yes")
-                    #
+                    if (current_player == self.piece.color):
+                        if isinstance(self.piece, Pawn):
+                            if current_row == (self.initial_row + (2 * self.piece.dir)):
+                                self.piece.jumped_two_tiles = True
+                            elif (current_row == self.initial_row + self.piece.dir and current_col == self.initial_col + 1) and self.piece.en_passant:
+                                if self.tiles[self.initial_row][self.initial_col + 1].has_enemy_piece(self.piece.color):
+                                    self.piece_list.remove(self.tiles[self.initial_row][self.initial_col + 1].piece_on_tile )
+                                    self.tiles[self.initial_row][self.initial_col + 1].piece_on_tile = None
+                                    self.piece.en_passant = False
+                            if (current_row == self.initial_row + self.piece.dir and current_col == self.initial_col - 1) and self.piece.en_passant:
+                                if self.tiles[self.initial_row][self.initial_col - 1].has_enemy_piece(self.piece.color):
+                                    self.piece_list.remove(self.tiles[self.initial_row][self.initial_col - 1].piece_on_tile)
+                                    self.tiles[self.initial_row][self.initial_col - 1].piece_on_tile = None
+                                    self.piece.en_passant = False
+                        self.piece.moved = True 
+                        self.piece.row = current_row
+                        self.piece.col = current_col
+                        if self.tiles[current_row][current_col].piece_on_tile != None and self.tiles[current_row][current_col].piece_on_tile.color != self.piece.color:
+                            self.piece_list.remove(self.tiles[current_row][current_col].piece_on_tile)
+                        self.tiles[current_row][current_col].piece_on_tile = self.piece
+                        # if self.tiles[current_row][current_col].is_tile_occupied() and self.tiles[current_row][current_col].has_enemy_piece(self.piece.color):
+                        #     enemy_piece = self.tiles[current_row][current_col].get_piece()
+                        #     del enemy_piece
+                        self.tiles[self.initial_row][self.initial_col].piece_on_tile = None
+                        self.piece.moves.clear()
+                        self.piece.tile_num_of_moves.clear()
+
+                        #pawn promotion move
+                        if (isinstance(self.piece, Pawn) and (self.piece.color == WHITE and self.piece.row == 0)) or (isinstance(self.piece, Pawn) and (self.piece.color == BLACK and self.piece.row == 7)):
+                            # pawn_promotion(self, self.tiles, self.piece, self.screen, self.piece_list)
+                            pawn_promotion(self.screen, self.piece, self.tiles, self.piece_list)
+
+                        return True
                     
 
-    def drop_piece(self):
+    def drop_piece(self, current_player, turn):
         self.dragging = False
-        self.move()
+        if self.move(current_player):
+            turn += 1
         self.piece = None
+        return turn

@@ -7,7 +7,7 @@ from check_system import *
 from mouse import Mouse
 
 class Board:
-    def __init__(self):
+    def __init__(self, screen):
         self.tiles = [[None, None, None, None, None, None, None, None] for col in range(COLUMNS)]
         self.king = None
         self.black_king = None
@@ -15,7 +15,8 @@ class Board:
         self.piece_list = []
         self.set_up_empty_board()
         self.put_pieces()
-        self.mouse = Mouse(self.tiles, self.piece_list)
+        self.mouse = Mouse(self.tiles, self.piece_list, screen)
+        self.current_king = self.white_king
 
     #method to display the board
     def display_board(self, screen):

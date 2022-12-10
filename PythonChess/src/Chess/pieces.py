@@ -87,6 +87,7 @@ class Pawn(Piece):
     def __init__(self, color: chr, row, col):
         super().__init__('pawn', color, 1.0, row, col)
         self.jumped_two_tiles = False
+        self.en_passant = False
         if color == 'white':
             self.dir = -1
         else:

@@ -54,16 +54,6 @@ def in_check_mate(tiles, piece_list, king):
                         king.in_checkmate = True
         return king.in_checkmate
 
-def in_mate(tiles, piece_list, king):
-    in_mate_bool = True
-    for piece in piece_list:
-        if piece.color == king.color:
-            for move_tile in piece.tile_num_of_moves:
-                move_row, move_col = return_row_and_col(move_tile)
-                if would_remove_check(tiles, king.color, piece, move_row, move_col):
-                    return False
-    return in_mate_bool
-
 def would_put_in_check(tiles, color, piece, move_row, move_col):
     temp_board = copy.deepcopy(tiles)
     # temp_board = tiles.copy()
