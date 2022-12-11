@@ -56,7 +56,7 @@ class Main:
         turn: int = 1
         current_player = WHITE
         while True:
-            if (not in_check_mate(board.tiles, board.piece_list, board.current_king)):
+            if (not in_check_mate(board.tiles, board.piece_list, board.current_king)) and (not in_stale_mate(board.tiles, board.piece_list, board.current_king)):
                 if turn % 2 == 0:
                     current_player = BLACK
                     board.current_king = board.black_king
@@ -111,7 +111,10 @@ class Main:
                 calculate_legal_moves_loop(board.piece_list, board.tiles)
                 pg.display.update()
             else:
-                print("Checkmate!")
+                if board.current_king.in_checkmate:
+                    print("Checkmate!")
+                else:
+                    print("Draw!")
                 pg.quit()
                 system.exit()
         

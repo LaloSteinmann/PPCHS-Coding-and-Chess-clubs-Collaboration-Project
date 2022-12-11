@@ -13,6 +13,8 @@ class Board:
         self.black_king = None
         self.white_king = None
         self.piece_list = []
+        self.black_piece_list = []
+        self.white_piece_list = []
         self.set_up_empty_board()
         self.put_pieces()
         self.mouse = Mouse(self.tiles, self.piece_list, screen)
