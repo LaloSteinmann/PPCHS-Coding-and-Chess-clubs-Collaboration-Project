@@ -2,8 +2,8 @@ import pygame as pg
 from tile import *
 from constants import *
 from pieces import *
-from calculate_legal_moves import *
-from check_system import *
+from calculate_legal_moves import return_row_and_col
+from check_system import get_king, would_put_in_check, would_remove_check
 from mouse import Mouse
 
 class Board:
@@ -19,15 +19,16 @@ class Board:
         self.put_pieces()
         self.mouse = Mouse(self.tiles, self.piece_list, screen)
         self.current_king = self.white_king
+        self.next_king = self.black_king
 
     #method to display the board
     def display_board(self, screen):
         for row in range(ROWS):
             for col in range(COLUMNS):
                 if (row + col) % 2 == 0:
-                    color = (160, 82, 45) #dark blue
+                    color = (255, 211, 155) #light square
                 else:
-                    color = (255, 211, 155) #light blue
+                    color = (160, 82, 45) #dark square
                 rect = (col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE)
 
                 pg.draw.rect(screen, color, rect)
@@ -101,13 +102,13 @@ class Board:
         self.piece_list.append(self.tiles[black_pieces_row][7].piece_on_tile)
 
         #black queen
-        self.tiles[black_pieces_row][4] = Tile(black_pieces_row, 4, Queen('black', black_pieces_row, 4))
-        self.piece_list.append(self.tiles[black_pieces_row][4].piece_on_tile)
+        self.tiles[black_pieces_row][3] = Tile(black_pieces_row, 3, Queen('black', black_pieces_row, 3))
+        self.piece_list.append(self.tiles[black_pieces_row][3].piece_on_tile)
 
         #black king
-        self.tiles[black_pieces_row][3] = Tile(black_pieces_row, 3, King('black', black_pieces_row, 3))
-        self.black_king = self.tiles[black_pieces_row][3].piece_on_tile
-        self.piece_list.append(self.tiles[black_pieces_row][3].piece_on_tile)
+        self.tiles[black_pieces_row][4] = Tile(black_pieces_row, 4, King('black', black_pieces_row, 4))
+        self.black_king = self.tiles[black_pieces_row][4].piece_on_tile
+        self.piece_list.append(self.tiles[black_pieces_row][4].piece_on_tile)
 
         #sets up the white pawns
         for col in range(COLUMNS):
@@ -133,10 +134,14 @@ class Board:
         self.piece_list.append(self.tiles[white_pieces_row][7].piece_on_tile)
 
         #white queen
-        self.tiles[white_pieces_row][4] = Tile(white_pieces_row, 4, Queen('white', white_pieces_row, 4))
-        self.piece_list.append(self.tiles[white_pieces_row][4].piece_on_tile)
+        self.tiles[white_pieces_row][3] = Tile(white_pieces_row, 3, Queen('white', white_pieces_row, 3))
+        self.piece_list.append(self.tiles[white_pieces_row][3].piece_on_tile)
 
         #white king
-        self.tiles[white_pieces_row][3] = Tile(white_pieces_row, 3, King('white', white_pieces_row, 4))
-        self.white_king = self.tiles[white_pieces_row][3].piece_on_tile
-        self.piece_list.append(self.tiles[white_pieces_row][3].piece_on_tile)
+        self.tiles[white_pieces_row][4] = Tile(white_pieces_row, 4, King('white', white_pieces_row, 4))
+        self.white_king = self.tiles[white_pieces_row][4].piece_on_tile
+        self.piece_list.append(self.tiles[white_pieces_row][4].piece_on_tile)
+
+        #2d-list of the rooks on the board that will be used for castling
+        self.rook_pairs = [[self.tiles[white_pieces_row][0].piece_on_tile, self.tiles[white_pieces_row][7].piece_on_tile], 
+        [self.tiles[black_pieces_row][0].piece_on_tile, self.tiles[black_pieces_row][7].piece_on_tile]]

@@ -60,9 +60,11 @@ class Main:
                 if turn % 2 == 0:
                     current_player = BLACK
                     board.current_king = board.black_king
+                    board.next_king = board.white_king
                 else:
                     current_player = WHITE
                     board.current_king = board.white_king
+                    board.next_king = board.black_king
 
                 board.display_board(screen)
                 board.display_pieces(screen)
@@ -103,12 +105,14 @@ class Main:
                                 board.show_moves(piece, screen)
                             mouse.update_blit(screen)
                     elif event.type == pg.MOUSEBUTTONUP: #drop
-                        turn = mouse.drop_piece(current_player, turn)
+                        turn = mouse.drop_piece(current_player, turn, board.rook_pairs)
                     elif event.type == pg.QUIT: #if the player exits the game, then close it
                         pg.quit()
                         system.exit()
                         
                 calculate_legal_moves_loop(board.piece_list, board.tiles)
+                castling(board.tiles, board.black_king, board.rook_pairs)
+                castling(board.tiles, board.white_king, board.rook_pairs)
                 pg.display.update()
             else:
                 if board.current_king.in_checkmate:

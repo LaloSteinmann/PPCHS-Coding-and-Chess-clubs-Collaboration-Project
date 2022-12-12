@@ -78,6 +78,7 @@ class King(Piece):
         self.in_stalemate = False
         self.in_checkmate = False
         self.tile_num = 0
+        self.castle_tile_nums = [None, None]
         if color == 'white':
             self.dir = -1
         else:
@@ -87,7 +88,10 @@ class Pawn(Piece):
     def __init__(self, color: chr, row, col):
         super().__init__('pawn', color, 1.0, row, col)
         self.jumped_two_tiles = False
-        self.en_passant = False
+        self.en_passant_right = False
+        self.en_passant_left = False
+        self.immediate_en_passant_right = True
+        self.immediate_en_passant_left = True
         if color == 'white':
             self.dir = -1
         else:

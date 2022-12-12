@@ -62,7 +62,6 @@ def in_stale_mate(tiles, piece_list, king: King):
                     move_row, move_col = return_row_and_col(move_tile)
                     if would_put_in_check(tiles, king.color, piece, move_row, move_col):
                         king.in_stalemate = True
-                        # return king.in_checkmate
                     else:
                         king.in_stalemate = False
                         return king.in_stalemate
@@ -95,6 +94,10 @@ def would_remove_check(tiles, color, piece, move_row, move_col):
     temp_board[move_row][move_col].piece_on_tile = piece
     temp_board[piece.row][piece.col].piece_on_tile = None
     king = get_king(tiles, color)
+    # if not isinstance(piece, King):
+    #     king = get_king(tiles, color)
+    # else:
+    #     piece
     temp_king = copy.deepcopy(king)
     # for row in range(ROWS):
     #     for col in range(COLUMNS):
@@ -107,6 +110,63 @@ def would_remove_check(tiles, color, piece, move_row, move_col):
         return False
     else:
         return True
+
+def castling(tiles, king: King, rook_pairs):
+
+    king.castle_tile_nums = [0, 0]
+
+    if king.color == WHITE:
+        rook_row = 0
+    else:
+        rook_row = 1
+
+    if not king.moved and not king.in_check:
+
+        if not rook_pairs[rook_row][0].moved:
+
+            is_queen_side_castling_legal = True
+
+            king_col = deepcopy(king.col)
+            row = king.row
+
+            while king_col > 1:
+
+                king_col -= 1
+
+                if tiles[row][king_col].is_tile_occupied() or would_put_in_check(tiles, king.color, king, row, king_col):
+                    is_queen_side_castling_legal = False
+                    break
+            
+            if is_queen_side_castling_legal:
+                king_tile = tiles[row][2]
+                king_tile_num = return_tile_num(king_tile)
+
+                king.add_move(king_tile, king_tile_num)
+                king.castle_tile_nums[0] = king_tile_num
+
+        if not rook_pairs[rook_row][1].moved:
+            
+            is_king_side_castling_legal = True
+
+            king_col = deepcopy(king.col)
+            row = king.row
+
+            king_col += 1
+
+            while king_col < 7:
+
+                if would_put_in_check(tiles, king.color, king, row, king_col) or tiles[row][king_col].is_tile_occupied():
+                    is_king_side_castling_legal = False
+                    break
+
+                king_col += 1
+
+            if is_king_side_castling_legal:
+                king_tile = tiles[row][6]
+                king_tile_num = return_tile_num(king_tile)
+                king.add_move(king_tile, king_tile_num)
+                king.castle_tile_nums[1] = king_tile_num
+
 
 def return_opposite_color(color):
     if color == 'white':
