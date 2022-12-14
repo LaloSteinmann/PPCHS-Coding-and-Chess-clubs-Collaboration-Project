@@ -52,7 +52,7 @@ class Main:
         board = self.board
         screen = self.screen
         mouse = self.board.mouse
-        screen.fill('black')
+        screen.fill('white')
         turn: int = 1
         current_player = WHITE
         while True:
@@ -113,7 +113,9 @@ class Main:
                 calculate_legal_moves_loop(board.piece_list, board.tiles)
                 castling(board.tiles, board.black_king, board.rook_pairs)
                 castling(board.tiles, board.white_king, board.rook_pairs)
+
                 pg.display.update()
+
             else:
                 if board.current_king.in_checkmate:
                     print("Checkmate!")
