@@ -4,18 +4,18 @@
 #include "SDL_image.h"
 
 //Initializer list and constructor for the Piece parent class
-Piece::Piece(int row, int col, int value, int color): row(row), col(col), value(value), color(color)
+Piece::Piece(int row, int col, int value, int color): value(value), color(color)
 {
 	coordinates.x = col;
 	coordinates.y = row;
 
 	if (color == WHITE)
 	{
-		direction = 1;
+		direction = -1;
 	}
 	else
 	{
-		direction = -1;
+		direction = 1;
 	}
 }
 
@@ -29,5 +29,16 @@ void Piece::calculateLegalMoves(Piece* board[ROWS][COLS])
 
 void Piece::setImage(const char* fileName)
 {
+	file = fileName;
 	image = IMG_Load(fileName);
+}
+
+SDL_Surface* Piece::getImage()
+{
+	return image;
+}
+
+const char* Piece::getFileName()
+{
+	return file;
 }

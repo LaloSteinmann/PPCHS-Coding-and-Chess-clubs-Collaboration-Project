@@ -52,7 +52,6 @@ class Main:
         board = self.board
         screen = self.screen
         mouse = self.board.mouse
-        screen.fill('white')
         turn: int = 1
         current_player = WHITE
         while True:
@@ -65,7 +64,8 @@ class Main:
                     current_player = WHITE
                     board.current_king = board.white_king
                     board.next_king = board.black_king
-
+                
+                screen.fill('white')
                 board.display_board(screen)
                 board.display_pieces(screen)
 

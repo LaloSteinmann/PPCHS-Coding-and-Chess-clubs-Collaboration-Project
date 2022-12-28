@@ -1,11 +1,8 @@
-#include "Piece.h"
 #pragma once
+#include "Piece.h"
 
 class Bishop: public Piece
 {
-private:
-	int value = 3;
-
 public:
 
 	Bishop(int row, int col, int color);

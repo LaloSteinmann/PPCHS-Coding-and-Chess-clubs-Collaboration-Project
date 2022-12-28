@@ -10,9 +10,9 @@ const int TILE_SIZE = int((0.8 * SCREEN_WIDTH) / COLS);
 
 const int WHITE = 0;
 const int BLACK = 1;
-const int EMPTY = 2;
 
-/*const char ROOK = 'R';
-const char QUEEN = 'Q';
-const char BISHOP = 'B';
-const char */
+const int WHITE_PIECE_ROW = 7;
+const int WHITE_PAWN_ROW = 6;
+
+const int BLACK_PIECE_ROW = 0;
+const int BLACK_PAWN_ROW = 1;

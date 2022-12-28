@@ -131,18 +131,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Bishop.cpp" />
-    <ClCompile Include="src\Board.cpp" />
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\King.cpp" />
+    <ClCompile Include="src\Knight.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Mouse.cpp" />
+    <ClCompile Include="src\Pawn.cpp" />
     <ClCompile Include="src\Piece.cpp" />
+    <ClCompile Include="src\Queen.cpp" />
+    <ClCompile Include="src\Rook.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Bishop.h" />
-    <ClInclude Include="src\Board.h" />
+    <ClInclude Include="src\boardFunctions.h" />
     <ClInclude Include="src\constants.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\King.h" />
     <ClInclude Include="src\Knight.h" />
+    <ClInclude Include="src\Mouse.h" />
     <ClInclude Include="src\Pawn.h" />
     <ClInclude Include="src\Piece.h" />
     <ClInclude Include="src\Position.h" />

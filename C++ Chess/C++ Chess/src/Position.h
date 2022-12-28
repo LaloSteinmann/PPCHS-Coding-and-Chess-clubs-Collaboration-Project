@@ -34,4 +34,14 @@ struct Position
 
 		return newPos;
 	}
+
+	//checks if a row and column are within the board
+	bool validCoordinate()
+	{
+		if ((x >= 0 && x < 8) && (y >= 0 && y < 8))
+		{
+			return true;
+		}
+		return false;
+	}
 };

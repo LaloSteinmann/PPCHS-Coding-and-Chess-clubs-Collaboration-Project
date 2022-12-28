@@ -1,2 +1,5 @@
-﻿  main.cpp
+﻿  Mouse.cpp
+C:\Users\edwar\Coding\PPCHS-Coding-and-Chess-clubs-Collaboration-Project\C++ Chess\C++ Chess\src\Mouse.h(23,35): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\Users\edwar\Coding\PPCHS-Coding-and-Chess-clubs-Collaboration-Project\C++ Chess\C++ Chess\src\Mouse.h(26,35): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\Users\edwar\Coding\PPCHS-Coding-and-Chess-clubs-Collaboration-Project\C++ Chess\C++ Chess\src\Mouse.cpp(61): warning C4715: 'Mouse::move': not all control paths return a value
   C++ Chess.vcxproj -> C:\Users\edwar\Coding\PPCHS-Coding-and-Chess-clubs-Collaboration-Project\C++ Chess\x64\Debug\C++ Chess.exe
